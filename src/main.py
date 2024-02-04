@@ -1,13 +1,14 @@
 from fastapi import FastAPI
+from src.database import connect_to_mongo, close_mongo_connection
 
 app = FastAPI()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.on_event("startup")
+async def startup():
+    await connect_to_mongo()
 
 
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+@app.on_event("shutdown")
+async def shutdown():
+    await close_mongo_connection()
