@@ -4,50 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02468233-7278-49bc-9977-7d3f85c7880e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/RizzPysiec.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements/base.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements/dev.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements/prod.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/auth/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/auth/constants.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/auth/dependencies.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/auth/exceptions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/auth/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/auth/router.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/auth/schemas.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/auth/service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/auth/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aws/client.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aws/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aws/constants.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aws/exceptions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aws/schemas.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aws/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/chatbot/chatbot_engine.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/chatbot/constants.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/chatbot/dependencies.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/chatbot/exceptions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/chatbot/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/chatbot/openai_integration.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/chatbot/router.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/chatbot/schemas.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/chatbot/service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/chatbot/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/database.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/exceptions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pagination.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_main.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_main.py" afterDir="false" />
+    <list default="true" id="02468233-7278-49bc-9977-7d3f85c7880e" name="Changes" comment="auth first step">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/dependencies.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/dependencies.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/router.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/router.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/schemas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,6 +37,9 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/database.py" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -84,7 +55,7 @@
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -100,7 +71,7 @@
       <recent name="C:\Users\mateu\OneDrive\Pulpit\PysiecBot\RizzPysiec\tests" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="FastAPI.RizzPysiec">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="RizzPysiec" />
       <option name="ENV_FILES" value="" />
@@ -115,6 +86,16 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </EXTENSION>
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -125,20 +106,35 @@
       <method v="2" />
     </configuration>
     <configuration name="RizzPysiec" type="Python.FastAPI">
-      <option name="file" value="$PROJECT_DIR$/main.py" />
+      <option name="file" value="$PROJECT_DIR$/src/main.py" />
       <module name="RizzPysiec" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Users\mateu\anaconda3\envs\RizzPysiec\python.exe" />
+      <option name="SDK_NAME" value="RizzPysiec" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </EXTENSION>
       <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="FastAPI.RizzPysiec" />
+      <item itemvalue="Python.main" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
@@ -165,13 +161,32 @@
       <workItem from="1707032526142" duration="1039000" />
       <workItem from="1707033573773" duration="1208000" />
       <workItem from="1707049169393" duration="10719000" />
+      <workItem from="1707068811327" duration="3640000" />
+      <workItem from="1707141422547" duration="815000" />
+      <workItem from="1707157641566" duration="1325000" />
+      <workItem from="1707215824822" duration="944000" />
+      <workItem from="1707217058032" duration="5796000" />
     </task>
+    <task id="LOCAL-00001" summary="auth first step">
+      <option name="closed" value="true" />
+      <created>1707068892732</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1707068892732</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="auth first step" />
+    <option name="LAST_COMMIT_MESSAGE" value="auth first step" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/RizzPysiec$main.coverage" NAME="main Coverage Results" MODIFIED="1707062445346" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/RizzPysiec$RizzPysiec.coverage" NAME="RizzPysiec Coverage Results" MODIFIED="1707222164295" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/RizzPysiec$main.coverage" NAME="main Coverage Results" MODIFIED="1707217530061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
 </project>

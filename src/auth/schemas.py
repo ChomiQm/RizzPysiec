@@ -2,7 +2,15 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, EmailStr, SecretStr, validator
 
-# Schema to create usr
+# validators
+
+
+def validate_date_in_the_past(date_field: Optional[datetime]) -> Optional[datetime]:
+    if date_field and date_field > datetime.utcnow():
+        raise ValueError('Date must be in the past')
+    return date_field
+
+# Create user schema
 
 
 class UserCreate(BaseModel):
@@ -11,21 +19,16 @@ class UserCreate(BaseModel):
     full_name: Optional[str] = None
     date_of_birth: Optional[datetime] = None
 
-    # BirthDate validator
-    @validator('date_of_birth')
-    def validate_date_of_birth(self, v):
-        if v and v > datetime.utcnow():
-            raise ValueError('Date of birth must be in the past')
-        return v
+    _validate_date_of_birth = validator('date_of_birth', allow_reuse=True)(validate_date_in_the_past)
 
-# Login schema
+# User login schema
 
 
 class UserLogin(BaseModel):
     username: EmailStr
     password: SecretStr
 
-# out user data
+# Out data schema
 
 
 class UserOut(BaseModel):
@@ -35,13 +38,12 @@ class UserOut(BaseModel):
     date_of_birth: Optional[datetime] = None
     join_date: datetime
 
-    # Pydantic cfg
     class Config:
         json_encoders = {
             datetime: lambda dt: dt.isoformat(),
         }
 
-# Update user schema
+# User update schema
 
 
 class UserUpdate(BaseModel):
@@ -49,13 +51,10 @@ class UserUpdate(BaseModel):
     phone_number: Optional[str] = None
     profile_info: Optional[str] = None
     date_of_birth: Optional[datetime] = None
-    # we can add more info to update
 
-    @validator('date_of_birth')
-    def validate_date_of_birth(self, v):
-        if v and v > datetime.utcnow():
-            raise ValueError('Date of birth must be in the past')
-        return v
+    _validate_date_of_birth = validator('date_of_birth', allow_reuse=True)(validate_date_in_the_past)
+
+# JWT token schema
 
 
 class Token(BaseModel):

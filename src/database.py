@@ -9,6 +9,13 @@ async def connect_to_mongo():
     global client
     client = AsyncIOMotorClient(settings.MONGODB_URI)
 
+    try:
+        client.admin.command("ping")
+        print("Connected to")
+        return True
+    except Exception as e:
+        print(e)
+        return "bagno"
 
 async def close_mongo_connection():
     if client:

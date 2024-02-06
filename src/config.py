@@ -1,12 +1,10 @@
 from pydantic import BaseSettings
+from decouple import config
 
 
 class Settings(BaseSettings):
-    MONGODB_URI: str  # MongoDB Atlas connection string
-    MONGO_DB: str     # Database name
-
-    class Config:
-        env_file = ".env"
+    MONGODB_URI: str = config('MONGODB_URI')
+    MONGO_DB: str = config('MONGO_DB')
 
 
 settings = Settings()

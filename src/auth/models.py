@@ -1,27 +1,10 @@
 from datetime import datetime
 from typing import Optional, List
 from bson import ObjectId
-from pydantic import BaseModel, Field, EmailStr, validator
-
-
-class PyObjectId(ObjectId):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if not ObjectId.is_valid(v):
-            raise ValueError(f"Invalid ObjectId: {v}")
-        return ObjectId(v)
-
-    @classmethod
-    def __modify_schema__(cls, field_schema):
-        field_schema.update(type="string")
+from pydantic import BaseModel, Field, EmailStr
 
 
 class UserInDB(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     username: EmailStr
     hashed_password: str
     full_name: Optional[str] = None
@@ -50,10 +33,3 @@ class UserInDB(BaseModel):
                 "last_activity": datetime.utcnow().isoformat(),
             }
         }
-
-    # date of birth validator
-    @validator('date_of_birth')
-    def validate_date_of_birth(self, v):
-        if v and v > datetime.utcnow():
-            raise ValueError('Date of birth must be in the past')
-        return v
