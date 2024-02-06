@@ -44,3 +44,15 @@ async def check_jwt(request: Request, next_: callable = Depends):
             return Response("Invalid token or expired token", status_code=403)
     else:
         return Response("Not authorized", status_code=403)
+
+
+def create_refresh_token(data: dict, expires_delta: timedelta = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        # Refresh lifetime 7d
+        expire = datetime.utcnow() + timedelta(days=7)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return encoded_jwt

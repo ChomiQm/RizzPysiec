@@ -1,12 +1,17 @@
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, EmailStr, SecretStr, validator
-
+import pytz
 # validators
 
 
-def validate_date_in_the_past(date_field: Optional[datetime]) -> Optional[datetime]:
-    if date_field and date_field > datetime.utcnow():
+def validate_date_in_the_past(date_field: datetime) -> datetime:
+    utc = pytz.UTC
+    now_aware = datetime.now(utc)
+    if date_field.tzinfo is None:
+        raise ValueError("Date of birth must be timezone aware")
+    date_field = date_field.astimezone(utc)
+    if date_field > now_aware:
         raise ValueError('Date must be in the past')
     return date_field
 
@@ -17,6 +22,7 @@ class UserCreate(BaseModel):
     username: EmailStr
     password: SecretStr
     full_name: Optional[str] = None
+    phone_number: Optional[str] = None  # Added phone number
     date_of_birth: Optional[datetime] = None
 
     _validate_date_of_birth = validator('date_of_birth', allow_reuse=True)(validate_date_in_the_past)
@@ -32,7 +38,6 @@ class UserLogin(BaseModel):
 
 
 class UserOut(BaseModel):
-    id: str
     username: EmailStr
     full_name: Optional[str] = None
     date_of_birth: Optional[datetime] = None
@@ -60,3 +65,9 @@ class UserUpdate(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class RefreshToken(BaseModel):
+    user_id: str
+    refresh_token: str
+    expires_at: datetime
