@@ -15,6 +15,7 @@ class UserInDB(BaseModel):
     profile_info: Optional[str] = None
     date_of_birth: Optional[datetime] = None
     last_activity: Optional[datetime] = None
+    account_confirmed: bool = Field(default=False)
 
     class Config:
         allow_population_by_field_name = True
@@ -31,5 +32,6 @@ class UserInDB(BaseModel):
                 "profile_info": "Some info about user",
                 "date_of_birth": "1990-01-01T00:00:00",
                 "last_activity": datetime.utcnow().isoformat(),
+                "account_confirmed": False,
             }
         }

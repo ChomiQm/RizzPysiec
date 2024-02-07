@@ -1,40 +1,44 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, EmailStr, SecretStr, validator
+from pydantic import BaseModel, EmailStr, SecretStr, Field, validator
 import pytz
-# validators
-
-
-def validate_date_in_the_past(date_field: datetime) -> datetime:
-    utc = pytz.UTC
-    now_aware = datetime.now(utc)
-    if date_field.tzinfo is None:
-        raise ValueError("Date of birth must be timezone aware")
-    date_field = date_field.astimezone(utc)
-    if date_field > now_aware:
-        raise ValueError('Date must be in the past')
-    return date_field
-
-# Create user schema
 
 
 class UserCreate(BaseModel):
     username: EmailStr
     password: SecretStr
-    full_name: Optional[str] = None
-    phone_number: Optional[str] = None  # Added phone number
-    date_of_birth: Optional[datetime] = None
+    full_name: Optional[str] = Field(default=None)
+    phone_number: Optional[str] = Field(default=None)
+    date_of_birth: Optional[datetime] = Field(default=None)
 
-    _validate_date_of_birth = validator('date_of_birth', allow_reuse=True)(validate_date_in_the_past)
+    @validator('date_of_birth', pre=True, allow_reuse=True)
+    def validate_date_in_the_past(self, v):
+        if v is not None:
+            utc = pytz.UTC
+            now_aware = datetime.utcnow().replace(tzinfo=utc)
+            if v.tzinfo is None or v.tzinfo.utcoffset(v) is None:
+                raise ValueError("Data urodzenia musi być świadoma strefy czasowej")
+            v = v.astimezone(utc)
+            if v > now_aware:
+                raise ValueError('Data musi być w przeszłości')
+        return v
 
-# User login schema
+    class Config:
+        orm_mode = True
+        json_encoders = {
+            datetime: lambda dt: dt.isoformat(),
+        }
+        populate_by_name = True
+
+
+class UserUpdate(UserCreate):
+    # Nie trzeba ponownie definiować walidatora, jeśli jest on już w UserCreate
+    pass
 
 
 class UserLogin(BaseModel):
     username: EmailStr
     password: SecretStr
-
-# Out data schema
 
 
 class UserOut(BaseModel):
@@ -48,26 +52,9 @@ class UserOut(BaseModel):
             datetime: lambda dt: dt.isoformat(),
         }
 
-# User update schema
-
-
-class UserUpdate(BaseModel):
-    full_name: Optional[str] = None
-    phone_number: Optional[str] = None
-    profile_info: Optional[str] = None
-    date_of_birth: Optional[datetime] = None
-
-    _validate_date_of_birth = validator('date_of_birth', allow_reuse=True)(validate_date_in_the_past)
-
-# JWT token schema
-
 
 class Token(BaseModel):
     access_token: str
-    token_type: str
-
-
-class RefreshToken(BaseModel):
-    user_id: str
+    token_type: str = "bearer"
     refresh_token: str
-    expires_at: datetime
+    expires_in: int  # Access token expires in seconds

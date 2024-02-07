@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer, HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
-from src.auth.config import settings
+from src.auth.config import auth_settings
 from src.auth.utils import decode_jwt
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
@@ -35,7 +35,7 @@ class JWTBearer(HTTPBearer):
 
 async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(token, auth_settings.SECRET_KEY, algorithms=[auth_settings.ALGORITHM])
         user_id = payload.get("sub")
         if user_id is None:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid JWT token")
@@ -50,7 +50,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
 
 async def parse_jwt_data(token: str = Depends(oauth2_scheme)) -> dict:
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(token, auth_settings.SECRET_KEY, algorithms=[auth_settings.ALGORITHM])
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

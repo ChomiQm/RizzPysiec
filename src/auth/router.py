@@ -1,54 +1,69 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from jose import JWTError
+from jose import JWTError, jwt
 from pymongo import ReturnDocument
 from src.auth.dependencies import get_current_user, JWTBearer
 from src.auth.models import UserInDB
 from src.auth.schemas import UserLogin, Token, UserOut, UserCreate
 from src.auth.service import authenticate_user
-from src.auth.utils import hash_password, verify_password, create_access_token, create_refresh_token, decode_jwt
+from src.auth.utils import hash_password, verify_password, create_access_token, create_refresh_token, decode_jwt, \
+    create_confirmation_token, send_email_with_template
+from src.config import settings
 from src.database import get_database
 from datetime import datetime, timedelta
-from src.auth.config import settings
+from src.auth.config import auth_settings
 
 auth_router = APIRouter()
 
 
 @auth_router.post("/register", response_model=UserOut)
 async def register_user(user: UserCreate, db=Depends(get_database)):
-    # Check if the username is already in use
     existing_user = await db["users"].find_one({"username": user.username})
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already registered")
 
-    # Hash the password
     hashed_password = hash_password(user.password.get_secret_value())
-
-    # Create the UserInDB object
     user_in_db = UserInDB(
         username=user.username,
         hashed_password=hashed_password,
         full_name=user.full_name,
         phone_number=user.phone_number,
         date_of_birth=user.date_of_birth,
-        join_date=datetime.utcnow(),  # Added join date here
-        roles=["user"],  # Added default role here
+        join_date=datetime.utcnow(),
+        roles=["user"],
+        account_confirmed=False
     )
 
-    # Save user to db
     result = await db["users"].insert_one(user_in_db.dict(by_alias=True))
     user_id = result.inserted_id
 
-    # prepare data to response without password
-    user_created = await db["users"].find_one({"_id": user_id})
-    user_created["_id"] = str(user_created["_id"])  # ObjectId -> string
+    confirmation_token = create_confirmation_token(user_id)
+    confirmation_link = (
+        f"http://localhost:8000/auth/confirm/{confirmation_token}"
+    )
+    email_template = "email_confirmation.html"
+    email_context = {
+        "username": user.username,
+        "confirmation_link": confirmation_link
+    }
+    await send_email_with_template(
+        email_to=user.username,
+        subject="Potwierdź swój adres e-mail",
+        template_name=email_template,
+        context=email_context
+    )
 
-    # Prepare and return the response data
-    user_out_data = {k: v for k, v in user_created.items() if k != "hashed_password"}
+    user_created = await db["users"].find_one({"_id": user_id})
+    user_created["_id"] = str(user_created["_id"])
+
+    user_out_data = {
+        k: v for k, v in user_created.items() if k != "hashed_password"
+    }
     user_out_data["id"] = user_created["_id"]
 
     return UserOut(**user_out_data)
 
 
+# Refresh token
 @auth_router.post("/token/refresh")
 async def refresh_token(token: str, db=Depends(get_database)):
     try:
@@ -71,7 +86,7 @@ async def refresh_token(token: str, db=Depends(get_database)):
         # Generate a new access token
         new_access_token = create_access_token(
             data={"sub": user_id},
-            expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+            expires_delta=timedelta(minutes=auth_settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         )
 
         # Optionally, generate a new refresh token and update it in the database
@@ -112,21 +127,48 @@ async def login_for_access_token(user: UserLogin):
     # Authenticate the user
     user_id = await authenticate_user(user.username, user.password.get_secret_value())
     if not user_id:
-        # If authentication fails, raise an HTTP 401 Unauthorized error
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # JWT generation
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    # JWT generation for access token
+    access_token_expires = timedelta(minutes=auth_settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": str(user_in_db["_id"])},
         expires_delta=access_token_expires
     )
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    # Refresh token generation
+    generated_refresh_token = create_refresh_token(data={"sub": str(user_in_db["_id"])})
+
+    # Calculate the expires_in value for the access token in minutes
+    expires_in = auth_settings.ACCESS_TOKEN_EXPIRE_MINUTES
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "refresh_token": generated_refresh_token,
+        "expires_in": expires_in
+    }
+
+
+@auth_router.get("/confirm/{token}")
+async def confirm_email(token: str, db=Depends(get_database)):
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        user_id = payload.get("user_id")
+        user = await db["users"].find_one_and_update(
+            {"_id": user_id},
+            {"$set": {"account_confirmed": True}},
+            return_document=True
+        )
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found or already confirmed")
+        return {"message": "Account successfully confirmed."}
+    except jwt.JWTError:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
 
 
 @auth_router.get("/user", response_model=UserOut, tags=["User"])
