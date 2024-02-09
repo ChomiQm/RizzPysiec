@@ -7,6 +7,7 @@ load_dotenv()
 app = FastAPI()
 app.include_router(auth_router)
 
+
 @app.on_event("startup")
 async def startup():
     await connect_to_mongo()

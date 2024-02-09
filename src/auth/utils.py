@@ -63,18 +63,49 @@ def create_refresh_token(data: dict, expires_delta: timedelta = None) -> str:
     return jwt.encode(to_encode, auth_settings.SECRET_KEY, algorithm=auth_settings.ALGORITHM)
 
 
+def verify_refresh_token(token: str):
+    credential_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"}
+    )
+    try:
+        payload = jwt.decode(token, auth_settings.SECRET_KEY, algorithms=[auth_settings.ALGORITHM])
+        sub = payload.get("sub")  # Ustawienie sub na podstawie danych z tokena odświeżającego
+        if sub is None:
+            raise credential_exception
+        # Zwróć bezpośrednio dane zdekodowane z tokena odświeżającego
+        return {"sub": sub}
+    except JWTError:
+        raise credential_exception
+
+
+def get_new_access_token(token: str):
+    try:
+        token_data = verify_refresh_token(token)
+        return create_access_token(token_data)
+    except HTTPException as e:
+        raise e
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred while processing the request."
+        )
+
+
 # Email configuration for sending emails
 def get_mail_config() -> ConnectionConfig:
+    print(settings.MAIL_USERNAME + "huj huj huj huj huj huj " + settings.MAIL_PASSWORD)
     return ConnectionConfig(
         MAIL_USERNAME=settings.MAIL_USERNAME,
         MAIL_PASSWORD=settings.MAIL_PASSWORD,
         MAIL_FROM=settings.MAIL_FROM_EMAIL,
         MAIL_PORT=settings.MAIL_PORT,
         MAIL_SERVER=settings.MAIL_HOST,
-        MAIL_FROM_NAME="Rizz Pysiec",
-        MAIL_TLS=True,
-        MAIL_SSL=settings.MAIL_ENABLE_SSL,
-        USE_CREDENTIALS=True
+        MAIL_STARTTLS=False,
+        MAIL_SSL_TLS=settings.MAIL_ENABLE_SSL,
+        USE_CREDENTIALS=True,
+        VALIDATE_CERTS=True
     )
 
 
@@ -100,4 +131,10 @@ async def send_email_with_template(email_to: str, subject: str, template_name: s
 def create_confirmation_token(user_id: str) -> str:
     expire = datetime.utcnow() + timedelta(days=1)  # 1d lifetime
     to_encode = {"exp": expire, "user_id": user_id}
-    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return jwt.encode(to_encode, auth_settings.SECRET_KEY, algorithm=auth_settings.ALGORITHM)
+
+
+def generate_password_reset_token(email: str, new_password) -> str:
+    expire = datetime.utcnow() + timedelta(hours=1)  # Token valid for 1 hour
+    to_encode = {"exp": expire, "email": email, "new_password": new_password}
+    return jwt.encode(to_encode, auth_settings.SECRET_KEY, algorithm=auth_settings.ALGORITHM)

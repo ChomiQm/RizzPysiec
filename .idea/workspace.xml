@@ -4,19 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02468233-7278-49bc-9977-7d3f85c7880e" name="Changes" comment="login and register worx">
-      <change afterPath="$PROJECT_DIR$/src/Templates/email_confirmation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/RizzPysiec.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/RizzPysiec.iml" afterDir="false" />
+    <list default="true" id="02468233-7278-49bc-9977-7d3f85c7880e" name="Changes" comment="Email included">
+      <change afterPath="$PROJECT_DIR$/src/Templates/password_reset_confirmation.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/auth/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/auth/dependencies.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/dependencies.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/auth/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/auth/router.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/router.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/auth/schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/schemas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/auth/service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/auth/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,24 +48,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "FastAPI.RizzPysiec.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.templateLanguages.PyTemplateLanguageModulesConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;FastAPI.RizzPysiec.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\mateu\OneDrive\Pulpit\PysiecBot\RizzPysiec\src\auth" />
@@ -105,13 +102,14 @@
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="EMULATE_TERMINAL" value="true" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <configuration name="RizzPysiec" type="Python.FastAPI">
+      <option name="additionalOptions" value="--reload --use-colors" />
       <option name="file" value="$PROJECT_DIR$/src/main.py" />
       <module name="RizzPysiec" />
       <option name="ENV_FILES" value="" />
@@ -155,6 +153,9 @@
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\mateu\AppData\Roaming\Subversion</configuration>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="02468233-7278-49bc-9977-7d3f85c7880e" name="Changes" comment="" />
@@ -176,7 +177,13 @@
       <workItem from="1707248514833" duration="5386000" />
       <workItem from="1707254738810" duration="114000" />
       <workItem from="1707307335284" duration="3952000" />
-      <workItem from="1707325746949" duration="10459000" />
+      <workItem from="1707325746949" duration="22584000" />
+      <workItem from="1707349493949" duration="341000" />
+      <workItem from="1707349846836" duration="16000" />
+      <workItem from="1707349931962" duration="1031000" />
+      <workItem from="1707394792213" duration="335000" />
+      <workItem from="1707420282074" duration="2653000" />
+      <workItem from="1707478155973" duration="13915000" />
     </task>
     <task id="LOCAL-00001" summary="auth first step">
       <option name="closed" value="true" />
@@ -202,7 +209,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707254759048</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Email included">
+      <option name="closed" value="true" />
+      <created>1707337363849</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1707337363849</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,10 +238,11 @@
     <MESSAGE value="auth first step" />
     <MESSAGE value="backend runs" />
     <MESSAGE value="login and register worx" />
-    <option name="LAST_COMMIT_MESSAGE" value="login and register worx" />
+    <MESSAGE value="Email included" />
+    <option name="LAST_COMMIT_MESSAGE" value="Email included" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/RizzPysiec$RizzPysiec.coverage" NAME="RizzPysiec Coverage Results" MODIFIED="1707337074292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/RizzPysiec$main.coverage" NAME="main Coverage Results" MODIFIED="1707217530061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/RizzPysiec$RizzPysiec.coverage" NAME="RizzPysiec Coverage Results" MODIFIED="1707491798566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/RizzPysiec$main.coverage" NAME="main Coverage Results" MODIFIED="1707349498422" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
 </project>

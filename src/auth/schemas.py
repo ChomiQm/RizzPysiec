@@ -1,39 +1,44 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
-from pydantic import BaseModel, EmailStr, SecretStr, Field, validator
-import pytz
+from pydantic import BaseModel, EmailStr, SecretStr, Field, field_validator
 
 
 class UserCreate(BaseModel):
-    username: EmailStr
-    password: SecretStr
+    username: EmailStr = Field(..., min_length=3, max_length=40, unique=True)
+    password: SecretStr = Field(..., min_length=8, max_length=40)
     full_name: Optional[str] = Field(default=None)
     phone_number: Optional[str] = Field(default=None)
-    date_of_birth: Optional[datetime] = Field(default=None)
+    date_of_birth: str = Field(default_factory=lambda: date(1900, 1, 1).isoformat())
 
-    @validator('date_of_birth', pre=True, allow_reuse=True)
-    def validate_date_in_the_past(self, v):
-        if v is not None:
-            utc = pytz.UTC
-            now_aware = datetime.utcnow().replace(tzinfo=utc)
-            if v.tzinfo is None or v.tzinfo.utcoffset(v) is None:
-                raise ValueError("Data urodzenia musi być świadoma strefy czasowej")
-            v = v.astimezone(utc)
-            if v > now_aware:
-                raise ValueError('Data musi być w przeszłości')
-        return v
+    @field_validator('date_of_birth')
+    def validate_date_in_the_past(cls, v: str):
+        # Parse the date string to a date object
+        birth_date = datetime.strptime(v, "%Y-%m-%d").date()
+        if birth_date > date.today():
+            raise ValueError("Stop cheating and give correct birth date")
+        # Return the string representation of the date
+        return birth_date.isoformat()
 
     class Config:
-        orm_mode = True
+        from_attributes = True
         json_encoders = {
             datetime: lambda dt: dt.isoformat(),
         }
+        date_parse_format = '%Y-%m-%d'
+        # Pydantic V2 configuration keys
         populate_by_name = True
 
 
-class UserUpdate(UserCreate):
-    # Nie trzeba ponownie definiować walidatora, jeśli jest on już w UserCreate
-    pass
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
+    phone_number: Optional[str] = None
+    date_of_birth: str = Field(default_factory=lambda: date(1900, 1, 1).isoformat())
+    profile_info: Optional[str] = None
+
+
+class PasswordUpdate(BaseModel):
+    old_password: SecretStr
+    new_password: SecretStr
 
 
 class UserLogin(BaseModel):
@@ -44,7 +49,7 @@ class UserLogin(BaseModel):
 class UserOut(BaseModel):
     username: EmailStr
     full_name: Optional[str] = None
-    date_of_birth: Optional[datetime] = None
+    date_of_birth: str = Field(default_factory=lambda: date(1900, 1, 1).isoformat())
     join_date: datetime
 
     class Config:
@@ -57,4 +62,3 @@ class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
     refresh_token: str
-    expires_in: int  # Access token expires in seconds
