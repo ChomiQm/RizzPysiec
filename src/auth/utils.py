@@ -1,3 +1,4 @@
+import pyotp
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
@@ -95,7 +96,6 @@ def get_new_access_token(token: str):
 
 # Email configuration for sending emails
 def get_mail_config() -> ConnectionConfig:
-    print(settings.MAIL_USERNAME + "huj huj huj huj huj huj " + settings.MAIL_PASSWORD)
     return ConnectionConfig(
         MAIL_USERNAME=settings.MAIL_USERNAME,
         MAIL_PASSWORD=settings.MAIL_PASSWORD,
@@ -138,3 +138,13 @@ def generate_password_reset_token(email: str, new_password) -> str:
     expire = datetime.utcnow() + timedelta(hours=1)  # Token valid for 1 hour
     to_encode = {"exp": expire, "email": email, "new_password": new_password}
     return jwt.encode(to_encode, auth_settings.SECRET_KEY, algorithm=auth_settings.ALGORITHM)
+
+
+def generate_2fa_secret() -> str:
+    secret = pyotp.random_base32()
+    return secret
+
+
+def verify_2fa_code(secret: str, code: str) -> bool:
+    totp = pyotp.TOTP(secret)
+    return totp.verify(code)
