@@ -84,7 +84,7 @@ async def disable_2fa(
     if not verify_password(password, user["hashed_password"]):
         raise HTTPException(status_code=401, detail="Incorrect password")
 
-    # Usuwanie sekretu 2FA z bazy danych
+    # Delete 2FA from db
     await db["users"].update_one({"_id": ObjectId(current_user["user_id"])}, {"$unset": {"two_fa_secret": ""}})
 
     return {"message": "2FA has been disabled"}
@@ -95,13 +95,31 @@ async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     two_fa_code: Optional[str] = Form(None)
 ):
-    access_token, refresh_token = await authenticate_user(
+    access_token, refresh_token, refresh_token_id = await authenticate_user(
         username=form_data.username,
         password=form_data.password,
         two_fa_code=two_fa_code
     )
 
-    return Token(access_token=access_token, token_type="bearer", refresh_token=refresh_token)
+    return Token(access_token=access_token,
+                 token_type="bearer", refresh_token=refresh_token,
+                 refresh_token_id=refresh_token_id)
+
+
+@auth_router.post("/logout")
+async def logout(token: str = Depends(oauth2_scheme), db=Depends(get_database)):
+    current_user = await get_current_user(token)
+    user_id = current_user.get("user_id")
+    if not user_id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
+
+    user_oid = ObjectId(user_id)
+    result = await db["refresh_tokens"].delete_many({"user_id": user_oid})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="No refresh token found for the current user")
+
+    return {"message": "Successfully logged out"}
 
 
 @auth_router.post("/user/initiate-password-change")
@@ -146,7 +164,6 @@ async def confirm_password_change(token: str, db=Depends(get_database)):
 @auth_router.get("/confirm/{token}")
 async def confirm_email(token: str, db=Depends(get_database)):
     try:
-
         payload = jwt.decode(token, auth_settings.SECRET_KEY, algorithms=[auth_settings.ALGORITHM])
         user_id = ObjectId(payload.get("user_id"))
 
@@ -211,16 +228,16 @@ async def enable_2fa(current_user: dict = Depends(get_current_user), db=Depends(
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-    # Generowanie sekretu 2FA
+    # 2FA secret gen
     secret = generate_2fa_secret()
     await db["users"].update_one({"_id": ObjectId(current_user["user_id"])}, {"$set": {"two_fa_secret": secret}})
 
-    # Generowanie URI dla TOTP
+    # Uri for TOTP
     username = user["username"]
     service_name = "RizzPysiec"
     uri = pyotp.TOTP(secret).provisioning_uri(name=username, issuer_name=service_name)
 
-    # Tworzenie kodu QR
+    # QR code creation
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -231,12 +248,12 @@ async def enable_2fa(current_user: dict = Depends(get_current_user), db=Depends(
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
 
-    # Zapisywanie obrazu kodu QR do bufora
+    # QR to bufor write
     buf = BytesIO()
     img.save(buf, format="PNG")
     buf.seek(0)
 
-    # Zwracanie kodu QR jako obrazu
+    # return QR as img
     return StreamingResponse(buf, media_type="image/png")
 
 

@@ -22,16 +22,3 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
             detail=f"Could not validate credentials {e}",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
-
-async def parse_jwt_data(token: str = Depends(oauth2_scheme)) -> dict:
-    try:
-        payload = jwt.decode(token, auth_settings.SECRET_KEY, algorithms=[auth_settings.ALGORITHM])
-    except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    return {"user_id": payload["sub"]}

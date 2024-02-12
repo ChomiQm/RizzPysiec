@@ -34,7 +34,6 @@ class UserUpdate(BaseModel):
     phone_number: Optional[str] = None
     date_of_birth: str = Field(default_factory=lambda: date(1900, 1, 1).isoformat())
     profile_info: Optional[str] = None
-    two_fa_secret: Optional[str] = None
 
 
 class PasswordUpdate(BaseModel):
@@ -63,3 +62,4 @@ class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
     refresh_token: str
+    refresh_token_id: str

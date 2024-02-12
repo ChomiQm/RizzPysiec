@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from typing import Optional
 
 from fastapi import HTTPException, status
@@ -32,7 +32,7 @@ async def authenticate_user(username: str, password: str, two_fa_code: Optional[
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-    # Token gen
+        # Token generation
     access_token_expires = timedelta(minutes=auth_settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": str(user_in_db["_id"])}, expires_delta=access_token_expires
@@ -40,4 +40,13 @@ async def authenticate_user(username: str, password: str, two_fa_code: Optional[
 
     refresh_token = create_refresh_token(data={"sub": str(user_in_db["_id"])})
 
-    return access_token, refresh_token
+    # Save the refresh token in the database and get its ID
+    refresh_token_data = {
+        "user_id": user_in_db["_id"],
+        "refresh_token": refresh_token,
+        "expires_at": datetime.utcnow() + timedelta(days=7)  # Example expiration
+    }
+    result = await db["refresh_tokens"].insert_one(refresh_token_data)
+    refresh_token_id = str(result.inserted_id)
+
+    return access_token, refresh_token, refresh_token_id
