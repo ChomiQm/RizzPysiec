@@ -4,12 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02468233-7278-49bc-9977-7d3f85c7880e" name="Changes" comment="Pass confirm token and 2FA created">
+    <list default="true" id="02468233-7278-49bc-9977-7d3f85c7880e" name="Changes" comment="repaired som changes">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Templates/two_factor_mail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/auth/dependencies.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/dependencies.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/auth/router.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/router.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/auth/schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/schemas.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/auth/service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/auth/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/auth/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,24 +50,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;FastAPI.RizzPysiec.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "FastAPI.RizzPysiec.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\mateu\OneDrive\Pulpit\PysiecBot\RizzPysiec\src\auth" />
@@ -188,6 +194,8 @@
       <workItem from="1707674956764" duration="253000" />
       <workItem from="1707681422159" duration="853000" />
       <workItem from="1707682395204" duration="2771000" />
+      <workItem from="1707749438466" duration="26000000" />
+      <workItem from="1707816789099" duration="4598000" />
     </task>
     <task id="LOCAL-00001" summary="auth first step">
       <option name="closed" value="true" />
@@ -237,7 +245,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707669011092</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="repaired som changes">
+      <option name="closed" value="true" />
+      <created>1707749466012</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1707749466012</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -261,10 +277,11 @@
     <MESSAGE value="Email included" />
     <MESSAGE value="login,register,sender,jwt gen done" />
     <MESSAGE value="Pass confirm token and 2FA created" />
-    <option name="LAST_COMMIT_MESSAGE" value="Pass confirm token and 2FA created" />
+    <MESSAGE value="repaired som changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="repaired som changes" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/RizzPysiec$RizzPysiec.coverage" NAME="RizzPysiec Coverage Results" MODIFIED="1707684439397" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/RizzPysiec$RizzPysiec.coverage" NAME="RizzPysiec Coverage Results" MODIFIED="1707820478879" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/RizzPysiec$main.coverage" NAME="main Coverage Results" MODIFIED="1707349498422" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
 </project>

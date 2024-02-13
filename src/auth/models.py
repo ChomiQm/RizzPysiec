@@ -16,7 +16,13 @@ class UserInDB(BaseModel):
     date_of_birth: str = Field(default_factory=lambda: date(1900, 1, 1).isoformat())
     last_activity: Optional[datetime] = None
     account_confirmed: bool = Field(default=False)
-    two_fa_secret: Optional[str] = None
+    failed_login_attempts: int = 0
+    lockout_time: Optional[datetime] = None
+    last_failed_login_attempt: Optional[datetime] = None
+    two_fa_qr_secret: Optional[str] = None
+    two_fa_email_code: Optional[str] = None
+    two_fa_email_code_generated_at: Optional[datetime] = None
+    two_fa_email_enabled: bool = Field(default=False)
 
     class Config:
         populate_by_name = True

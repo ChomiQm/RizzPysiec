@@ -1,3 +1,6 @@
+import random
+from typing import Optional
+
 import pyotp
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
@@ -6,13 +9,10 @@ from fastapi import HTTPException, status, Request
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from starlette.templating import Jinja2Templates
-
-from src.auth.config import auth_settings  # Make sure this import path is correct
-from src.config import settings  # Ensure this import is necessary or adjust accordingly
+from src.auth.config import auth_settings
+from src.config import settings
 
 templates = Jinja2Templates(directory="src/templates")
-
-# Password hashing context setup
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -62,6 +62,15 @@ def create_refresh_token(data: dict, expires_delta: timedelta = None) -> str:
     expire = datetime.utcnow() + (expires_delta or timedelta(days=7))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, auth_settings.SECRET_KEY, algorithm=auth_settings.ALGORITHM)
+
+
+def verify_temporary_token(temporary_token: str) -> Optional[str]:
+    try:
+        payload = jwt.decode(temporary_token, auth_settings.SECRET_KEY, algorithms=[auth_settings.ALGORITHM])
+        if payload.get("2fa") and "sub" in payload:
+            return payload["sub"]
+    except JWTError:
+        return None
 
 
 def verify_refresh_token(token: str):
@@ -128,6 +137,13 @@ async def send_email_with_template(email_to: str, subject: str, template_name: s
     await fm.send_message(message)
 
 
+def create_temporary_token_for_2fa(user_id: str) -> str:
+    expire = datetime.utcnow() + timedelta(minutes=10)  # Token wygasa po 10 minutach
+    to_encode = {"sub": str(user_id), "exp": expire, "2fa": True}  # Dodatkowe pole "2fa": True
+    encoded_jwt = jwt.encode(to_encode, auth_settings.SECRET_KEY, algorithm=auth_settings.ALGORITHM)
+    return encoded_jwt
+
+
 def create_confirmation_token(user_id: str) -> str:
     expire = datetime.utcnow() + timedelta(days=1)  # 1d lifetime
     to_encode = {"exp": expire, "user_id": user_id}
@@ -140,11 +156,24 @@ def generate_password_reset_token(email: str, new_password) -> str:
     return jwt.encode(to_encode, auth_settings.SECRET_KEY, algorithm=auth_settings.ALGORITHM)
 
 
-def generate_2fa_secret() -> str:
+def generate_2fa_qr_secret() -> str:
     secret = pyotp.random_base32()
     return secret
 
 
-def verify_2fa_code(secret: str, code: str) -> bool:
+def verify_2fa_qr_code(secret: str, code: str) -> bool:
     totp = pyotp.TOTP(secret)
     return totp.verify(code)
+
+
+def generate_2fa_email_code() -> str:
+    return ''.join([str(random.randint(0, 9)) for _ in range(6)])
+
+
+def verify_2fa_email_code(user: dict, code: str) -> bool:
+    code_valid_duration = timedelta(minutes=10)
+    if (user["two_fa_email_code"] == code and
+            user["two_fa_email_code_generated_at"] and
+            datetime.utcnow() - user["two_fa_email_code_generated_at"] <= code_valid_duration):
+        return True
+    return False

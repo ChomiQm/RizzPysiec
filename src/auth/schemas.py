@@ -58,8 +58,21 @@ class UserOut(BaseModel):
         }
 
 
-class Token(BaseModel):
+class AccessTokenResponse(BaseModel):
     access_token: str
-    token_type: str = "bearer"
+    token_type: str = "Bearer"
     refresh_token: str
     refresh_token_id: str
+
+
+class TwoFactorAuthResponse(BaseModel):
+    message: str  # Informacja o wymaganej weryfikacji 2FA
+    temporary_token: str  # Tymczasowy token dla procesu 2FA
+    two_factor_required: bool = True  # Zawsze true dla tej odpowiedzi
+    two_factor_method: str  # Metoda weryfikacji 2FA ("email" lub "google_authenticator")
+
+
+class Verify2FA(BaseModel):
+    code: str = Field(..., description="The 2FA code provided by the user.")
+    temporary_token: str = Field(..., description="Temporary token for 2FA process.")
+    method: str = Field(..., description="Method of 2FA (email or google_authenticator).")
