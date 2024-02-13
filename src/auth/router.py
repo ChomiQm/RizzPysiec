@@ -3,7 +3,7 @@ from typing import Annotated
 import pyotp
 import qrcode
 from bson import ObjectId
-from fastapi import APIRouter, HTTPException, status, Depends, Response, Body
+from fastapi import APIRouter, HTTPException, status, Depends, Response, Body, BackgroundTasks
 from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt, JWTError
@@ -11,19 +11,21 @@ from pydantic import SecretStr
 from starlette.responses import JSONResponse
 from src.auth.dependencies import get_current_user, oauth2_scheme
 from src.auth.models import UserInDB
-from src.auth.schemas import AccessTokenResponse, UserOut, UserCreate, UserUpdate, PasswordUpdate, Verify2FA,  \
-    TwoFactorAuthResponse
+from src.auth.schemas import AccessTokenResponse, UserOut, UserCreate, UserUpdate, PasswordUpdate, Verify2FA, \
+    TwoFactorAuthResponse, PasswordResetRequest, PasswordResetConfirm
 from src.auth.service import authenticate_user, generate_tokens
 from src.auth.utils import hash_password, verify_password, create_access_token, \
-    create_confirmation_token, send_email_with_template, generate_password_reset_token, verify_refresh_token, \
-    generate_2fa_qr_secret, verify_2fa_email_code, verify_temporary_token, verify_2fa_qr_code, generate_2fa_email_code
+    create_confirmation_token, send_email_with_template, generate_password_change_token, verify_refresh_token, \
+    generate_2fa_qr_secret, verify_2fa_email_code, verify_temporary_token, verify_2fa_qr_code,  \
+    generate_2fa_email_code, generate_password_reset_token
 from src.database import get_database
 from datetime import datetime
 from src.auth.config import auth_settings
-
+from src.config import settings
 auth_router = APIRouter()
 
 
+# mozna zmienic link z localhost ale trzeba sprawdzic
 @auth_router.post("/register", response_model=UserOut)
 async def register_user(user: UserCreate, db=Depends(get_database)):
     existing_user = await db["users"].find_one({"username": user.username})
@@ -172,6 +174,42 @@ async def logout(token: str = Depends(oauth2_scheme), db=Depends(get_database)):
     return {"message": "Successfully logged out"}
 
 
+@auth_router.post("/forgot-password", response_model=None)  # Wyłączenie generowania modelu odpowiedzi
+async def forgot_password(request: PasswordResetRequest, background_tasks: BackgroundTasks):
+    db = get_database()
+    user = await db["users"].find_one({"username": request.username})
+    if not user:
+        raise HTTPException(status_code=404, detail="User with this email does not exist.")
+
+    reset_token = generate_password_reset_token(user['username'])
+    confirmation_link = f"{settings.FRONTEND_URL}/reset-password/{reset_token}"
+
+    background_tasks.add_task(send_email_with_template,
+                              email_to=user['username'],  # Tutaj również używam 'username'
+                              subject="Password Reset",
+                              template_name="password_reset.html",
+                              context={"link": confirmation_link})
+
+    return {"message": "If your email is registered you will receive a password reset link."}
+
+
+@auth_router.post("/password-reset/confirm")
+async def confirm_password_reset(request: PasswordResetConfirm):
+    db = get_database()
+    payload = jwt.decode(request.token, auth_settings.SECRET_KEY, algorithms=[auth_settings.ALGORITHM])
+    email = payload.get("email")
+
+    user = await db["users"].find_one({"email": email})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    hashed_password = hash_password(request.new_password)
+    await db["users"].update_one({"email": email}, {"$set": {"hashed_password": hashed_password}})
+
+    return {"message": "Your password has been reset successfully."}
+
+
+# mozna zmienic confirmation link z localhost, trzeba sprawdzic
 @auth_router.post("/user/initiate-password-change")
 async def initiate_password_change(request: PasswordUpdate, current_user: dict = Depends(get_current_user),
                                    db=Depends(get_database)):
@@ -179,10 +217,10 @@ async def initiate_password_change(request: PasswordUpdate, current_user: dict =
     if not user or not verify_password(request.old_password.get_secret_value(), user["hashed_password"]):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect old password")
 
-    reset_token = generate_password_reset_token(user['username'], request.new_password.get_secret_value())
+    reset_token = generate_password_change_token(user['username'], request.new_password.get_secret_value())
     confirmation_link = f"http://localhost:8000/user/confirm-password-change/{reset_token}"
 
-    email_template = "password_reset_confirmation.html"
+    email_template = "password_change_confirmation.html"
     email_context = {"confirmation_link": confirmation_link}
     await send_email_with_template(
         email_to=user['username'],

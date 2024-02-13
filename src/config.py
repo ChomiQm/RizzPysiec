@@ -12,5 +12,7 @@ class Settings:
     MAIL_PASSWORD: str = config('MAIL_PASSWORD')
     MAIL_FROM_EMAIL: str = config('MAIL_FROM_EMAIL')
 
+    FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
+
 
 settings = Settings()

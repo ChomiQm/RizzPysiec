@@ -150,9 +150,15 @@ def create_confirmation_token(user_id: str) -> str:
     return jwt.encode(to_encode, auth_settings.SECRET_KEY, algorithm=auth_settings.ALGORITHM)
 
 
-def generate_password_reset_token(email: str, new_password) -> str:
+def generate_password_change_token(email: str, new_password) -> str:
     expire = datetime.utcnow() + timedelta(hours=1)  # Token valid for 1 hour
     to_encode = {"exp": expire, "email": email, "new_password": new_password}
+    return jwt.encode(to_encode, auth_settings.SECRET_KEY, algorithm=auth_settings.ALGORITHM)
+
+
+def generate_password_reset_token(email: str) -> str:
+    expire = datetime.utcnow() + timedelta(hours=1)  # Token valid for 1 hour
+    to_encode = {"exp": expire, "email": email}
     return jwt.encode(to_encode, auth_settings.SECRET_KEY, algorithm=auth_settings.ALGORITHM)
 
 

@@ -76,3 +76,12 @@ class Verify2FA(BaseModel):
     code: str = Field(..., description="The 2FA code provided by the user.")
     temporary_token: str = Field(..., description="Temporary token for 2FA process.")
     method: str = Field(..., description="Method of 2FA (email or google_authenticator).")
+
+
+class PasswordResetRequest(BaseModel):
+    username: EmailStr
+
+
+class PasswordResetConfirm(BaseModel):
+    token: str
+    new_password: str
